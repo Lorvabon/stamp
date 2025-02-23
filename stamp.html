@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>報價章產生器</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif; }
+        #stamp-container {
+            position: relative;
+            display: inline-block;
+        }
+        #stamp {
+            width: 490px; /* 調整章大小 */
+            height: auto;
+        }
+        #date {
+            position: absolute;
+            top: 51%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: "DFKai-SB", "標楷體", "Microsoft JhengHei", "微軟正黑體", sans-serif;
+            font-size: 30px;
+            font-weight: bold;
+            color: black;
+            text-align: center;
+            width: 75%;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>報價章產生器</h2>
+    <label for="dateInput">選擇日期：</label>
+    <input type="date" id="dateInput">
+    <button onclick="generateStamp()">更新日期</button>
+    <button onclick="downloadStamp()">下載 PNG</button>
+
+    <div id="stamp-container">
+        <img id="stamp" src="菱多報價章.png" alt="報價章" crossorigin="anonymous">
+        <div id="date">114 / 02 / 23</div>
+    </div>
+
+    <script>
+        function generateStamp() {
+            let dateValue = document.getElementById("dateInput").value;
+            if (!dateValue) {
+                alert("請選擇日期！");
+                return;
+            }
+
+            let dateObj = new Date(dateValue);
+            let year = dateObj.getFullYear() - 1911; // 轉換成民國年
+            let month = String(dateObj.getMonth() + 1).padStart(2, '0');
+            let day = String(dateObj.getDate()).padStart(2, '0');
+
+            document.getElementById("date").innerText = `${year} / ${month} / ${day}`;
+        }
+
+        function downloadStamp() {
+            html2canvas(document.getElementById("stamp-container"), { useCORS: true }).then(canvas => {
+                let link = document.createElement("a");
+                link.download = "報價章.png";
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+    </script>
+
+</body>
+</html>
